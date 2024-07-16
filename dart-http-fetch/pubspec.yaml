@@ -1,0 +1,13 @@
+name: dartHTTPFetch
+description: >-
+  example for for dart http fetch of json code and pretty printing results to controls. Includes retry and logging aspects.
+version: 0.0.1
+homepage: https://github.com/Collective-Technology-Solutions/flutter-dart-prototype-projects
+
+environment:
+  sdk: '^3.4.0'
+
+dependencies:
+  http: ^0.13.4
+  logging: ^1.0.2
+
