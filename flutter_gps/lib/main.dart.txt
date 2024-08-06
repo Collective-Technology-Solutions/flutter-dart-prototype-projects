@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'geo_location_provider.dart';
+import 'mobile_geo_location_provider.dart';
+import 'desktop_geo_location_provider.dart';
+import 'web_geo_location_provider.dart';
+import 'geo_location_cache.dart';
+import 'logger.dart';
+
+void main() {
+  Logger.initialize();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Geolocation App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  GeoLocationProvider _geoProvider;
+  final GeoLocationCache _cache = GeoLocationCache();
+  final int _updateInterval = 10; // seconds
+
+  @override
+  void initState() {
+    super.initState();
+    _geoProvider = _createGeoLocationProvider();
+    _startLocationUpdates();
+  }
+
+  GeoLocationProvider _createGeoLocationProvider() {
+    if (kIsWeb) {
+      return WebGeoLocationProvider();
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+               defaultTargetPlatform == TargetPlatform.android) {
+      return MobileGeoLocationProvider();
+    } else {
+      return DesktopGeoLocationProvider();
+    }
+  }
+
+  void _startLocationUpdates() {
+    _fetchLocation();
+    Future.delayed(Duration(seconds: _updateInterval), _startLocationUpdates);
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      final location = await _geoProvider.getCurrentLocation();
+      Logger.log("Location fetched: ${location.latitude}, ${location.longitude}");
+      _cache.add(location);
+      setState(() {});
+    } catch (e) {
+      Logger.log("Failed to fetch location: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final location = _cache.latest;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Geolocation"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (location != null)
+              Text(
+                "LAT: ${location.latitude}, LNG: ${location.longitude}",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _fetchLocation,
+              child: Text("Refresh Location"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
