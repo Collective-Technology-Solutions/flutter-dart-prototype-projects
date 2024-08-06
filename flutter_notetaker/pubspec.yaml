@@ -1,0 +1,36 @@
+name: note_taking_app
+label: "Note Taking App"
+description: A Flutter app for note-taking with Markdown support and email functionality.
+version: 1.0.0
+buildNumber: 0
+packageName: note_taking_app
+buildSignature: none
+installerStore: none
+
+
+environment:
+  sdk: ">=3.6.0-55.0.dev <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_markdown: ^0.6.10
+  http: ^1.2.2
+  logging: ^1.0.0
+  path_provider: ^2.0.15
+  flutter_email_sender: ^5.0.3
+  split_view: ^3.2.1
+  provider: any
+  cupertino_icons: ^1.0.8
+  package_info_plus: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
