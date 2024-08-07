@@ -1,4 +1,3 @@
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'geo_location_provider.dart';
 

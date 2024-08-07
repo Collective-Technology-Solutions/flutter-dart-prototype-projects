@@ -1,13 +1,12 @@
 // lib/views/gps_history_view.dart
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import '../../geo_location_cache.dart';
 
 class GPSHistoryView extends StatelessWidget {
   final GeoLocationCache cache;
 
-  GPSHistoryView({required this.cache});
+  const GPSHistoryView({super.key, required this.cache});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class GPSHistoryView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("GPS History"),
+        title: const Text("GPS History"),
       ),
       body: ListView.builder(
         itemCount: locations.length,

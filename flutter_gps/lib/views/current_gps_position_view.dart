@@ -3,14 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../geo_location_cache.dart';
-import '../../logger.dart';
 
 class CurrentGPSPositionView extends StatelessWidget {
   final Position? currentPosition;
   final GeoLocationCache cache;
   final Future<void> Function() onRefresh;
 
-  CurrentGPSPositionView({
+  const CurrentGPSPositionView({super.key, 
     required this.currentPosition,
     required this.cache,
     required this.onRefresh,
@@ -20,7 +19,7 @@ class CurrentGPSPositionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Current GPS Position"),
+        title: const Text("Current GPS Position"),
       ),
       body: Center(
         child: Column(
@@ -29,12 +28,12 @@ class CurrentGPSPositionView extends StatelessWidget {
             if (currentPosition != null)
               Text(
                 "LAT: ${currentPosition!.latitude}, LNG: ${currentPosition!.longitude}",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onRefresh,
-              child: Text("Refresh Location"),
+              child: const Text("Refresh Location"),
             ),
           ],
         ),
