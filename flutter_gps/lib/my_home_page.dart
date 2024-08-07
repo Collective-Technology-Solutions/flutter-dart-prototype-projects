@@ -94,12 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   : LatLng(0, 0),
             ),
             LeafletView(
-                cachedLocations: _cache.getAll(),
+                cachedLocations: _cache,
             ),
               // currentLocation: _currentPosition != null
               //     ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
               //     : LatLng(0, 0),
-            ),
+            // ),
           ],
         ),
       ),

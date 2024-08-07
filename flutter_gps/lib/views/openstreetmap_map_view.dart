@@ -23,13 +23,13 @@ class OpenStreetMapView extends StatelessWidget {
         children: [
           TileLayer(
             urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+            // subdomains: ['a', 'b', 'c'],
           ),
           MarkerLayer(
             markers: [
               Marker(
                 point: currentLocation,
-                child: Icon(Icons.location_pin, color: Colors.blue, size: 40),
+                child: Icon(Icons.location_pin, color: Colors.red, size: 40),
               ),
             ],
           ),

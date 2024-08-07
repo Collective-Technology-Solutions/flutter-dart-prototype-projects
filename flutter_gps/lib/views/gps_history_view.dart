@@ -10,7 +10,7 @@ class GPSHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locations = cache.getAll();
+    final locations = cache.getOverView(); //All();
 
     return Scaffold(
       appBar: AppBar(
