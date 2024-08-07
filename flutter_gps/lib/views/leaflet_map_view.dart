@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gps/views/map_support.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../geo_location_cache.dart';
 
@@ -20,7 +19,7 @@ class LeafletView extends StatelessWidget {
       ),
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: cachedLocations.getCurrent()==null ? cachedLocations.getCurrentAsLatLgn() : LatLng(0, 0),
+          initialCenter: cachedLocations.getCurrent()!=null ? cachedLocations.getCurrentAsLatLgn() : LatLng(0, 0),
           initialZoom: 13.0,
         ),
         children: [

@@ -10,7 +10,7 @@ class GPSHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locations = cache.getOverView(); //All();
+    final locations = cache.getAll(); //sgetOverView(); //All();
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +21,7 @@ class GPSHistoryView extends StatelessWidget {
         itemBuilder: (context, index) {
           final position = locations[index];
           return ListTile(
-            title: Text("LAT: ${position.latitude}, LNG: ${position.longitude}"),
+            title: Text("LAT: ${position.latitude}, LNG: ${position.longitude}, ALT: ${position.altitude}"),
             subtitle: Text("Timestamp: ${position.timestamp}"),
           );
         },

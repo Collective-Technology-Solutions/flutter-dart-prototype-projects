@@ -3,7 +3,11 @@ import 'package:latlong2/latlong.dart';
 
 class GeoLocationCache {
   final List<Position> _locations = [];
-  final int _maxSize = 10;
+  final int _maxSize = 100;
+
+  bool testData = false;
+  int driftCount = -1;
+  double driftValue = .05;
 
   Position? getCurrent() {
     return _locations.last;
@@ -17,7 +21,19 @@ class GeoLocationCache {
     if (_locations.length >= _maxSize) {
       _locations.removeAt(0);
     }
-    _locations.add(location);
+
+    Position p;
+    if ( testData && ++driftCount != 0 ) {
+       var map = location.toJson();
+       // Assuming 'map' is a Map<String, dynamic> and 'location.latitude + driftValue' is the new value.
+       map.update(
+           'latitude',
+               (existingValue) => (existingValue as double) + (driftCount* driftValue),
+           ifAbsent: () => location.latitude + driftValue // Optional: Define the value if the key doesn't exist
+       );
+      p = Position.fromMap(map);
+    } else p = location;
+    _locations.add(p);
   }
 
  List<Position> getAll() {

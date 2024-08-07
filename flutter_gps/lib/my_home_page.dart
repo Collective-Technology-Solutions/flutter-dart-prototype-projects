@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text("Geolocation App"),
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Tab(text: "Current GPS Position"),
               Tab(text: "GPS History"),
               Tab(text: "OpenStreetMap"),
-              Tab(text: "Leaflet"),
+              // Tab(text: "Leaflet"),
             ],
           ),
         ),
@@ -89,16 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             GPSHistoryView(cache: _cache),
             OpenStreetMapView(
-              currentLocation: _currentPosition != null
-                  ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
-                  : LatLng(0, 0),
+              cachedLocations: _cache,
             ),
-            LeafletView(
-                cachedLocations: _cache,
-            ),
-              // currentLocation: _currentPosition != null
-              //     ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
-              //     : LatLng(0, 0),
+            // LeafletView(
+            //     cachedLocations: _cache,
             // ),
           ],
         ),
