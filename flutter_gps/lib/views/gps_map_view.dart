@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';
 
 class GPSMapView extends StatelessWidget {
+  const GPSMapView({super.key});
+
   // if used here, we are no longer stateless
   // final Logger _logger = Logger('GPSMapView');
 

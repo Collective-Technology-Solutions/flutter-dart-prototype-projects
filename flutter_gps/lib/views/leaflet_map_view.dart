@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';
 
 class LeafletView extends StatelessWidget {
+  const LeafletView({super.key});
+
   // if used here, we are no longer stateless
   // final Logger _logger = Logger('LeafletView');
 
@@ -29,7 +31,7 @@ class LeafletView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Leaflet Map'),
+        title: const Text('Leaflet Map'),
       ),
       body: FlutterMap(
         options: MapOptions(

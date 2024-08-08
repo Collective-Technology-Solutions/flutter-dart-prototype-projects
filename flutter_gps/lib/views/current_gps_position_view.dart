@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';
 
 class CurrentGPSPositionView extends StatelessWidget {
+  const CurrentGPSPositionView({super.key});
+
   // if used here, we are no longer stateless
   // final Logger _logger = Logger('CurrentGPSPositionView');
 
@@ -22,7 +24,7 @@ class CurrentGPSPositionView extends StatelessWidget {
           children: <Widget>[
             if (currentPosition != null)
               Text(
-                "LAT: ${currentPosition!.latitude},\nLNG: ${currentPosition!.longitude},\nALT: ${currentPosition!.altitude}\nACC: ${currentPosition!.accuracy}\nSPE: ${currentPosition!.speed}",
+                "LAT: ${currentPosition.latitude},\nLNG: ${currentPosition.longitude},\nALT: ${currentPosition.altitude}\nACC: ${currentPosition.accuracy}\nSPE: ${currentPosition.speed}",
                 style: const TextStyle(
                     fontSize: 22, fontWeight: FontWeight.normal),
               ),

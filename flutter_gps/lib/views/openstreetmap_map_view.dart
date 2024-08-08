@@ -12,6 +12,8 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class OpenStreetMapView extends StatefulWidget {
+  const OpenStreetMapView({super.key});
+
   @override
   _OpenStreetMapViewState createState() => _OpenStreetMapViewState();
 }
@@ -47,13 +49,13 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('OpenStreetMap'),
+        title: const Text('OpenStreetMap'),
       ),
       body: FlutterMap(
         options: MapOptions(
           initialCenter: geoLocationCache.latest != null
               ? geoLocationCache.getCurrentAsLatLgn()
-              : LatLng(0, 0),
+              : const LatLng(0, 0),
           initialZoom: 13.0, //TODO change to follow: settings.zoomOnAccuracy
         ),
         children: [

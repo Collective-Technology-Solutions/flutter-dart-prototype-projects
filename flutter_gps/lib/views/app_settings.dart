@@ -23,7 +23,7 @@ class AppSettings {
 }
 
 class SettingsProvider extends ChangeNotifier {
-  AppSettings _settings = AppSettings();
+  final AppSettings _settings = AppSettings();
 
   AppSettings get settings => _settings;
 

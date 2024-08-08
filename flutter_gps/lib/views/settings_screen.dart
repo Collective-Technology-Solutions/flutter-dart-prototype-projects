@@ -3,6 +3,8 @@ import 'package:flutter_gps/views/app_settings.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
   // if used here, we are no longer stateless
   // final Logger _logger = Logger('SettingsScreen');
 
@@ -12,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Spinner control for update frequency
-            Text('Positional Update Frequency (seconds)'),
+            const Text('Positional Update Frequency (seconds)'),
             DropdownButton<int>(
               value: settingsProvider.settings.updateFrequency,
               onChanged: (newValue) {
@@ -33,10 +35,10 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Spinner control for update frequency
-            Text('Max Position Tracking'),
+            const Text('Max Position Tracking'),
             DropdownButton<int>(
               value: settingsProvider.settings.maxEntryCount,
               onChanged: (newValue) {
@@ -49,34 +51,34 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
 
             // Toggle for precision
-            Text('Precision'),
+            const Text('Precision'),
             SwitchListTile(
-              title: Text('Fine Precision'),
+              title: const Text('Fine Precision'),
               value: settingsProvider.settings.isFinePrecision,
               onChanged: (value) {
                 settingsProvider.togglePrecision();
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
 
             // Toggle for precision
-            Text('Sequential Duplicates'),
+            const Text('Sequential Duplicates'),
             SwitchListTile(
-              title: Text('Ignore Sequential Duplicates Updates'),
+              title: const Text('Ignore Sequential Duplicates Updates'),
               value: settingsProvider.settings.deduplicateOnLastUpdate,
               onChanged: (value) {
                 settingsProvider.togglePrecision();
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Spinner control for ignore radius
-            Text('Ignore updates inside radius (meters)'),
+            const Text('Ignore updates inside radius (meters)'),
             DropdownButton<double>(
               value: settingsProvider.settings.ignoreRadius,
               onChanged: (newValue) {
@@ -89,11 +91,11 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Toggle for zoom on accuracy
             SwitchListTile(
-              title: Text('Zoom on Accuracy'),
+              title: const Text('Zoom on Accuracy'),
               value: settingsProvider.settings.zoomOnAccuracy,
               onChanged: (value) {
                 settingsProvider.toggleZoomOnAccuracy();
@@ -101,7 +103,7 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // Spinner control for update frequency
-            Text('Cache Expiration (days)'),
+            const Text('Cache Expiration (days)'),
             DropdownButton<int>(
               value: settingsProvider.settings.cacheExpirationDays,
               onChanged: (newValue) {
@@ -114,10 +116,10 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Spinner control for cache item max count
-            Text('Cache Max Items'),
+            const Text('Cache Max Items'),
             DropdownButton<int>(
               value: settingsProvider.settings.maxNrOfCacheObjects,
               onChanged: (newValue) {
@@ -130,7 +132,7 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
           ],
         ),

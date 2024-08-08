@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 void main() {
   _setupLogging();
 
-  Logger _logger = Logger('Main');
+  // Logger _logger = Logger('Main');
 
   // runApp(const MyApp());
   runApp(
@@ -28,7 +28,7 @@ void main() {
           },
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -39,15 +39,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Logger _logger = Logger('MyApp');
-    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
-    final appSettings = Provider.of<SettingsProvider>(context).settings;
+    // final Logger _logger = Logger('MyApp');
+    // final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    // final appSettings = Provider.of<SettingsProvider>(context).settings;
     return MaterialApp(
       title: 'GPS Positioning',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }

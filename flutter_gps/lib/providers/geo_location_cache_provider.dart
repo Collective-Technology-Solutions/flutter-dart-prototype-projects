@@ -40,9 +40,10 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     final latestPosition = _positionCache.latest;
 
     if (latestPosition == null) {
-      return LatLng(0, 0);
-    } else
+      return const LatLng(0, 0);
+    } else {
       return _positionCacheUtils.getAsLatLgn(latestPosition);
+    }
   }
 
   void setSettingsProvider(AppSettings settings) {
@@ -51,7 +52,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
 
   void updateSettings(AppSettings settings) {
     this._settings = settings;
-    _provider = _createGeoLocationProvider() as GeoLocationService;
+    _provider = _createGeoLocationProvider();
   }
 
   Future<void> startService() async {
@@ -73,9 +74,10 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     } catch (e) {
       _logger.severe(e);
     } finally {
-      if (_runService)
+      if (_runService) {
         Future.delayed(
             Duration(seconds: _settings.updateFrequency), fetchLocation);
+      }
     }
   }
 
@@ -182,7 +184,9 @@ class _PositionCache implements PositionCache {
       // else
       // _locations.add(location);
     }
-    else _locations.add(location);
+    else {
+      _locations.add(location);
+    }
   }
 
   @override
@@ -229,7 +233,7 @@ class _PositionCache implements PositionCache {
     LatLng latLng2 = LatLng(pos2.latitude, pos2.longitude);
 
     // Create a Distance object from latlong2
-    final Distance distance = Distance();
+    const Distance distance = Distance();
 
     // Calculate the distance between the two LatLng points
     return distance(latLng1, latLng2);

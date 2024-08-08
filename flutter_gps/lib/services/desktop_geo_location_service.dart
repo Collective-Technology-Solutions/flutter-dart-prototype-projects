@@ -9,6 +9,7 @@ class DesktopGeoLocationService implements GeoLocationService {
 
     //TODO: to plug in settings.isFinePrecision
     return await Geolocator.getCurrentPosition(
+      //TODO: to fix/replace desiredAccuracy
       desiredAccuracy: LocationAccuracy.high,
     );
   }

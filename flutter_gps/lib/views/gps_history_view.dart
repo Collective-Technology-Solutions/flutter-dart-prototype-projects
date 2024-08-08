@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';
 
 class GPSHistoryView extends StatelessWidget {
+  const GPSHistoryView({super.key});
+
   // if used here, we are no longer stateless
   // final Logger _logger = Logger('GPSHistoryView');
 
@@ -13,20 +15,21 @@ class GPSHistoryView extends StatelessWidget {
     final settings = Provider.of<SettingsProvider>(context).settings;
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
 
-    List<Position> _locations;
-    if (settings.deduplicateOnLastUpdate)
-      _locations = geoLocationCache.getOverView();
-    else
-      _locations = geoLocationCache.getAll();
+    List<Position> locations;
+    if (settings.deduplicateOnLastUpdate) {
+      locations = geoLocationCache.getOverView();
+    } else {
+      locations = geoLocationCache.getAll();
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('GPS History'),
       ),
       body: ListView.builder(
-        itemCount: _locations.length,
+        itemCount: locations.length,
         itemBuilder: (context, index) {
-          final position = _locations[index];
+          final position = locations[index];
           return ListTile(
             title: Text(
                 "${index}: LAT: ${position.latitude}, LNG: ${position.longitude}, ALT: ${position.altitude}"),

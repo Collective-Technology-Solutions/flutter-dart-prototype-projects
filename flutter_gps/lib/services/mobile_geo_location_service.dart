@@ -17,6 +17,7 @@ class MobileGeoLocationService implements GeoLocationService {
     //TODO: to plug in settings.isFinePrecision
     _logger.info("MobileGeoLocationProvider.getCurrentLocation() called");
     return await Geolocator.getCurrentPosition(
+      //TODO: to fix/replace desiredAccuracy
       desiredAccuracy: LocationAccuracy.high,
     );
   }

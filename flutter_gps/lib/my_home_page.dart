@@ -1,7 +1,3 @@
-// lib/my_home_page.dart
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gps/views/app_settings.dart';
 import 'package:flutter_gps/views/current_gps_position_view.dart';
@@ -15,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'providers/geo_location_cache_provider.dart';
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -25,7 +23,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -46,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Geolocation App"),
+          title: const Text("Geolocation App"),
           bottom: TabBar(
             tabs: tabs.keys.toList(),
           ),
@@ -60,10 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Map<Tab, Widget> _createTabs() {
     return Map.from({
-      Tab(text: "Settings"): SettingsScreen(),
-      Tab(text: "Current GPS Position"): CurrentGPSPositionView(),
-      Tab(text: "GPS History"): GPSHistoryView(),
-      Tab(text: "OpenStreetMap"): OpenStreetMapView(),
+      const Tab(text: "Settings"): const SettingsScreen(),
+      const Tab(text: "Current GPS Position"): const CurrentGPSPositionView(),
+      const Tab(text: "GPS History"): const GPSHistoryView(),
+      const Tab(text: "OpenStreetMap"): const OpenStreetMapView(),
       // Tab(text: "Leaflet") : LeafletView(),
     });
   }
