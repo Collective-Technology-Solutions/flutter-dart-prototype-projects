@@ -66,6 +66,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     }
   }
 
+  //TODO this method should be made private again so we do not have uncontrolled task scheduling
   Future<void> fetchLocation() async {
     try {
       final location = await _getCurrentLocation();
@@ -75,6 +76,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
       _logger.severe(e);
     } finally {
       if (_runService) {
+        _logger.fine( 'fetchLocation scheduled.');
         Future.delayed(
             Duration(seconds: _settings.updateFrequency), fetchLocation);
       }

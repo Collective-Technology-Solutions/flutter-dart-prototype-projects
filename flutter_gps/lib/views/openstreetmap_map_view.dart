@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_gps/providers/TileCacheManagerProvider.dart';
 import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
 import 'package:flutter_gps/providers/cached_tile_provider.dart';
 import 'package:flutter_gps/views/app_settings.dart';
@@ -36,16 +37,8 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context).settings;
+    final cacheManager = Provider.of<TileCacheManagerProvider>(context).cacheManager;
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
-
-    //TODO: move to a Provider
-    final cacheManager = CacheManager(
-      Config(
-        'customCacheKey',
-        stalePeriod: Duration(days: settings.cacheExpirationDays),
-        maxNrOfCacheObjects: settings.maxNrOfCacheObjects,
-      ),
-    );
 
     return Scaffold(
       appBar: AppBar(

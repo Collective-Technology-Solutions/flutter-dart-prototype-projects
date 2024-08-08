@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gps/providers/TileCacheManagerProvider.dart';
 import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
 import 'package:flutter_gps/views/app_settings.dart';
 import 'package:logging/logging.dart';
@@ -17,6 +18,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => SettingsProvider(),
 
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TileCacheManagerProvider(),
         ),
 
         // Use ChangeNotifierProxyProvider to create GeoLocationCache
