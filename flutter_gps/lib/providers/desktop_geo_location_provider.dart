@@ -6,6 +6,8 @@ class DesktopGeoLocationProvider implements GeoLocationProvider {
   @override
   Future<Position> getCurrentLocation() async {
     // Desktop implementation may vary. This is a placeholder.
+
+    //TODO: to plug in settings.isFinePrecision
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );

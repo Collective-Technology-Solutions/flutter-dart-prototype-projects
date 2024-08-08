@@ -6,7 +6,9 @@ class AppSettings {
   int ignoreRadius; // in meters
   bool zoomOnAccuracy;
   int cacheExpirationDays; // in days
-  bool deduplateOnLastUpdate;
+  bool deduplicateOnLastUpdate;
+  int maxEntryCount;
+  int maxNrOfCacheObjects;
 
   AppSettings({
     this.updateFrequency = 10,
@@ -14,7 +16,9 @@ class AppSettings {
     this.ignoreRadius = 1,
     this.zoomOnAccuracy = false,
     this.cacheExpirationDays = 7,
-    this.deduplateOnLastUpdate = true,
+    this.deduplicateOnLastUpdate = true,
+    this.maxEntryCount = 100,
+    this.maxNrOfCacheObjects = 500,
   });
 }
 
@@ -43,13 +47,23 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void cacheExpiration (int days) {
+  void cacheExpiration(int days) {
     _settings.cacheExpirationDays = days;
     notifyListeners();
   }
 
-  void deduplateOnLastUpdate( bool enabled ) {
-    _settings.deduplateOnLastUpdate = enabled;
+  void deduplicateOnLastUpdate(bool enabled) {
+    _settings.deduplicateOnLastUpdate = enabled;
+    notifyListeners();
+  }
+
+  void maxEntryCount(int maxEntryCount) {
+    _settings.maxEntryCount = maxEntryCount;
+    notifyListeners();
+  }
+
+  void maxNrOfCacheObjects(int maxNrOfCacheObjects) {
+    _settings.maxNrOfCacheObjects = maxNrOfCacheObjects;
     notifyListeners();
   }
 }

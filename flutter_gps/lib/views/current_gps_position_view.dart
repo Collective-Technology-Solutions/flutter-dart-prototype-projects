@@ -1,22 +1,17 @@
-// lib/views/current_gps_position_view.dart
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../geo_location_cache.dart';
+import 'package:provider/provider.dart';
+import '../providers/geo_location_cache_provider.dart';
 
 class CurrentGPSPositionView extends StatelessWidget {
-  final Position? currentPosition;
-  final GeoLocationCache cache;
-  final Future<void> Function() onRefresh;
-
-  const CurrentGPSPositionView({super.key, 
-    required this.currentPosition,
-    required this.cache,
-    required this.onRefresh,
-  });
+  // if used here, we are no longer stateless
+  // final Logger _logger = Logger('CurrentGPSPositionView');
 
   @override
   Widget build(BuildContext context) {
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    Position? currentPosition = geoLocationCache.latest;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Current GPS Position"),
@@ -28,11 +23,12 @@ class CurrentGPSPositionView extends StatelessWidget {
             if (currentPosition != null)
               Text(
                 "LAT: ${currentPosition!.latitude},\nLNG: ${currentPosition!.longitude},\nALT: ${currentPosition!.altitude}\nACC: ${currentPosition!.accuracy}\nSPE: ${currentPosition!.speed}",
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 22, fontWeight: FontWeight.normal),
               ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: onRefresh,
+              onPressed: geoLocationCache.fetchLocation,
               child: const Text("Refresh Location"),
             ),
           ],

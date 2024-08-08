@@ -3,6 +3,9 @@ import 'package:flutter_gps/views/app_settings.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
+  // if used here, we are no longer stateless
+  // final Logger _logger = Logger('SettingsScreen');
+
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
@@ -32,6 +35,23 @@ class SettingsScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
+            // Spinner control for update frequency
+            Text('Max Position Tracking'),
+            DropdownButton<int>(
+              value: settingsProvider.settings.maxEntryCount,
+              onChanged: (newValue) {
+                settingsProvider.updateFrequency(newValue!);
+              },
+              items: List.generate(100, (index) => index * 10)
+                  .map((value) => DropdownMenuItem<int>(
+                value: value,
+                child: Text(value.toString()),
+              ))
+                  .toList(),
+            ),
+            SizedBox(height: 16),
+
+
             // Toggle for precision
             Text('Precision'),
             SwitchListTile(
@@ -51,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
               onChanged: (newValue) {
                 settingsProvider.updateIgnoreRadius(newValue!);
               },
-              items: List.generate(10, (index) => index + 1)
+              items: List.generate(11, (index) => index)
                   .map((value) => DropdownMenuItem<int>(
                 value: value,
                 child: Text(value.toString()),
@@ -77,6 +97,22 @@ class SettingsScreen extends StatelessWidget {
                 settingsProvider.cacheExpiration(newValue!);
               },
               items: List.generate(30, (index) => index + 1)
+                  .map((value) => DropdownMenuItem<int>(
+                value: value,
+                child: Text(value.toString()),
+              ))
+                  .toList(),
+            ),
+            SizedBox(height: 16),
+
+            // Spinner control for cache item max count
+            Text('Cache Max Items'),
+            DropdownButton<int>(
+              value: settingsProvider.settings.maxNrOfCacheObjects,
+              onChanged: (newValue) {
+                settingsProvider.cacheExpiration(newValue!);
+              },
+              items: List.generate(10, (index) => index * 100)
                   .map((value) => DropdownMenuItem<int>(
                 value: value,
                 child: Text(value.toString()),

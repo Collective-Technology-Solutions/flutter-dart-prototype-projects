@@ -2,36 +2,46 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_gps/geo_location_cache.dart';
+import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
 import 'package:flutter_gps/providers/cached_tile_provider.dart';
 import 'package:flutter_gps/views/app_settings.dart';
 import 'package:flutter_gps/views/map_support.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-class OpenStreetMapView extends StatelessWidget {
-  late final GeoLocationCache cachedLocations;
-  late final CacheManager cacheManager;
+class OpenStreetMapView extends StatefulWidget {
+  @override
+  _OpenStreetMapViewState createState() => _OpenStreetMapViewState();
+}
 
-  OpenStreetMapView({required this.cachedLocations});
+class _OpenStreetMapViewState extends State<OpenStreetMapView> {
+  final Logger _logger = Logger('OpenStreetMapView');
 
-  //TODO to use this, we need to use a StatefulWidget. StateLESSWidget won't use it.
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final settings = Provider.of<SettingsProvider>(context).settings;
-  // }
+  @override
+  void initState() {
+    super.initState(); // should be called first
+
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose(); // should be be called last
+  }
 
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context).settings;
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
 
+    //TODO: move to a Provider
     final cacheManager = CacheManager(
       Config(
         'customCacheKey',
         stalePeriod: Duration(days: settings.cacheExpirationDays),
-        maxNrOfCacheObjects: 500,
+        maxNrOfCacheObjects: settings.maxNrOfCacheObjects,
       ),
     );
 
@@ -41,19 +51,19 @@ class OpenStreetMapView extends StatelessWidget {
       ),
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: cachedLocations.getCurrent() != null
-              ? cachedLocations.getCurrentAsLatLgn()
+          initialCenter: geoLocationCache.latest != null
+              ? geoLocationCache.getCurrentAsLatLgn()
               : LatLng(0, 0),
-          initialZoom: 13.0, //zoomForCurrent(cachedLocations.getCurrent()),
+          initialZoom: 13.0, //TODO change to follow: settings.zoomOnAccuracy
         ),
         children: [
           TileLayer(
             urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             tileProvider: CachedTileProvider(cacheManager: cacheManager),
-            // subdomains: ['a', 'b', 'c'],
+            errorTileCallback: (tile, error, stackTrace) => Center(child: Text('Failed to load map tiles ${error}.'))
           ),
           MarkerLayer(
-            markers: buildMarkers(cachedLocations),
+            markers: buildMarkers(geoLocationCache),
           ),
         ],
       ),

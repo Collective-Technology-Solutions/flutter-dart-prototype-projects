@@ -9,7 +9,6 @@ class CachedTileProvider extends NetworkTileProvider {
 
   @override
   ImageProvider getImage(TileCoordinates coordinates, TileLayer options) {
-    // final url = 'https://{s}.tile.openstreetmap.org/${coordinates.z}/${coordinates.x}/${coordinates.y}.png';
     return super.getImage(coordinates, options);
   }
 }
