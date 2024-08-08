@@ -49,7 +49,7 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
           initialCenter: geoLocationCache.latest != null
               ? geoLocationCache.getCurrentAsLatLgn()
               : const LatLng(0, 0),
-          initialZoom: 13.0, //TODO change to follow: settings.zoomOnAccuracy
+          initialZoom: (settings.zoomOnAccuracy) ? zoomForCurrent(geoLocationCache.latest) : 13.0,
         ),
         children: [
           TileLayer(

@@ -16,7 +16,7 @@ class GPSHistoryView extends StatelessWidget {
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
 
     List<Position> locations;
-    if (settings.deduplicateOnLastUpdate) {
+    if (settings.uiDeduplicateOnLastUpdate) {
       locations = geoLocationCache.getOverView();
     } else {
       locations = geoLocationCache.getAll();

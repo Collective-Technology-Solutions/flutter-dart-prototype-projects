@@ -21,8 +21,19 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            // Toggle for zoom on accuracy
+            SwitchListTile(
+              title: const Text('Update Zoom on Accuracy'),
+              value: settingsProvider.settings.zoomOnAccuracy,
+              onChanged: (value) {
+                settingsProvider.toggleZoomOnAccuracy();
+              },
+            ),
+            const SizedBox(height: 16),
+
             // Spinner control for update frequency
-            const Text('Positional Update Frequency (seconds)'),
+            const Text('Update Data Frequency (seconds)'),
             DropdownButton<int>(
               value: settingsProvider.settings.updateFrequency,
               onChanged: (newValue) {
@@ -38,9 +49,9 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Spinner control for update frequency
-            const Text('Max Position Tracking'),
+            const Text('Max Data Tracked'),
             DropdownButton<int>(
-              value: settingsProvider.settings.maxEntryCount,
+              value: settingsProvider.settings.maxDataEntryCount,
               onChanged: (newValue) {
                 settingsProvider.updateFrequency(newValue!);
               },
@@ -53,9 +64,8 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-
             // Toggle for precision
-            const Text('Precision'),
+            const Text('Data Precision'),
             SwitchListTile(
               title: const Text('Fine Precision'),
               value: settingsProvider.settings.isFinePrecision,
@@ -65,20 +75,19 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-
             // Toggle for precision
-            const Text('Sequential Duplicates'),
+            const Text('Sequential UI Duplicates'),
             SwitchListTile(
-              title: const Text('Ignore Sequential Duplicates Updates'),
-              value: settingsProvider.settings.deduplicateOnLastUpdate,
+              title: const Text('Ignore Duplicates UI Updates'),
+              value: settingsProvider.settings.uiDeduplicateOnLastUpdate,
               onChanged: (value) {
-                settingsProvider.togglePrecision();
+                settingsProvider.toggleDeduplicateOnLastUpdate();
               },
             ),
             const SizedBox(height: 16),
 
             // Spinner control for ignore radius
-            const Text('Ignore updates inside radius (meters)'),
+            const Text('Ignore Data Updates Within Radius (meters)'),
             DropdownButton<double>(
               value: settingsProvider.settings.ignoreRadius,
               onChanged: (newValue) {
@@ -93,17 +102,8 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Toggle for zoom on accuracy
-            SwitchListTile(
-              title: const Text('Zoom on Accuracy'),
-              value: settingsProvider.settings.zoomOnAccuracy,
-              onChanged: (value) {
-                settingsProvider.toggleZoomOnAccuracy();
-              },
-            ),
-
             // Spinner control for update frequency
-            const Text('Cache Expiration (days)'),
+            const Text('Data Cache Expiration (days)'),
             DropdownButton<int>(
               value: settingsProvider.settings.cacheExpirationDays,
               onChanged: (newValue) {
@@ -119,7 +119,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Spinner control for cache item max count
-            const Text('Cache Max Items'),
+            const Text('Data Cache Max Items'),
             DropdownButton<int>(
               value: settingsProvider.settings.maxNrOfCacheObjects,
               onChanged: (newValue) {
@@ -132,7 +132,6 @@ class SettingsScreen extends StatelessWidget {
               ))
                   .toList(),
             ),
-            const SizedBox(height: 16),
 
           ],
         ),

@@ -34,9 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context).settings;
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
-    //TODO: put this on a toggle switch
-    geoLocationCache.startService();
+
+    bool _isToggled = settings.serviceRunning; // State for the toggle button
 
     final tabs = _createTabs();
     return DefaultTabController(
@@ -47,6 +48,21 @@ class _MyHomePageState extends State<MyHomePage> {
           bottom: TabBar(
             tabs: tabs.keys.toList(),
           ),
+          actions: [
+            // Toggle button on the right side of the AppBar
+            Switch(
+              value: settings.serviceRunning,
+              onChanged: (value) {
+                setState(() {
+                  settings.serviceRunning = value;
+                  if ( settings.serviceRunning )
+                    geoLocationCache.startService();
+                  else geoLocationCache.stopService();
+                  print( "Service Running set to: ${settings.serviceRunning}");
+                });
+              },
+            ),
+          ],
         ),
         body: TabBarView(
           children: tabs.values.toList(),

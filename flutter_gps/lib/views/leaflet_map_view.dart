@@ -29,7 +29,7 @@ class LeafletView extends StatelessWidget {
       body: FlutterMap(
         options: MapOptions(
           initialCenter: geoLocationCache.getCurrentAsLatLgn(),
-          initialZoom: 13.0, //TODO change to follow: settings.zoomOnAccuracy
+          initialZoom: (settings.zoomOnAccuracy) ? zoomForCurrent(geoLocationCache.latest) : 13.0,
         ),
         children: [
           TileLayer(

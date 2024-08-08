@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
 }
 
 void _setupLogging() {
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.WARNING;
   Logger.root.onRecord.listen((record) {
     // print( StackTrace.current );
     final String where = StackTrace.current.toString().split('\n')[2].split('(')[1].split(')')[0];

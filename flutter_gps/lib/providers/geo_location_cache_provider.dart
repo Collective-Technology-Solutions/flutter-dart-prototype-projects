@@ -16,8 +16,6 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
   late _PositionCache _positionCache;
   final PositionCacheUtils _positionCacheUtils = PositionCacheUtils();
 
-  bool _runService = false;
-
   GeoLocationCacheProvider() {
     _positionCache = _PositionCache();
     _provider = _createGeoLocationProvider();
@@ -57,9 +55,8 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
 
   Future<void> startService() async {
     _positionCache.updateSettings(_settings);
-    if (_runService) return; //already running
+    if (!_settings.serviceRunning) return;
     try {
-      _runService = true;
       fetchLocation();
     } catch (e) {
       _logger.severe(e);
@@ -75,7 +72,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     } catch (e) {
       _logger.severe(e);
     } finally {
-      if (_runService) {
+      if (_settings.serviceRunning) {
         _logger.fine( 'fetchLocation scheduled.');
         Future.delayed(
             Duration(seconds: _settings.updateFrequency), fetchLocation);
@@ -84,7 +81,8 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
   }
 
   void stopService() {
-    _runService = false;
+    _settings.serviceRunning = false;
+    notifyListeners();
   }
 
   @override
@@ -243,7 +241,7 @@ class _PositionCache implements PositionCache {
 
   void updateSettings(AppSettings settings) {
     _ignoreRadius = settings.ignoreRadius;
-    _maxSize = settings.maxEntryCount;
+    _maxSize = settings.maxDataEntryCount;
   }
 
   @override

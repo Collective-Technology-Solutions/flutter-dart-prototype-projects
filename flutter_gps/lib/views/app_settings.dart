@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppSettings {
+  bool serviceRunning;
   int updateFrequency; // in seconds
   bool isFinePrecision;
   double ignoreRadius; // in meters
   bool zoomOnAccuracy;
   int cacheExpirationDays; // in days
-  bool deduplicateOnLastUpdate;
-  int maxEntryCount;
+  bool uiDeduplicateOnLastUpdate;
+  int maxDataEntryCount;
   int maxNrOfCacheObjects;
 
   AppSettings({
-    this.updateFrequency = 10,
+    this.serviceRunning = false,
+    this.updateFrequency = 3,
     this.isFinePrecision = false,
     this.ignoreRadius = 1,
     this.zoomOnAccuracy = false,
     this.cacheExpirationDays = 7,
-    this.deduplicateOnLastUpdate = true,
-    this.maxEntryCount = 100,
+    this.uiDeduplicateOnLastUpdate = true,
+    this.maxDataEntryCount = 100,
     this.maxNrOfCacheObjects = 500,
   });
 }
@@ -26,6 +28,14 @@ class SettingsProvider extends ChangeNotifier {
   final AppSettings _settings = AppSettings();
 
   AppSettings get settings => _settings;
+
+  void updateServiceRunning(bool run ) {
+    _settings.serviceRunning = run;
+  }
+
+  void toogleServiceRunning() {
+    _settings.serviceRunning = !_settings.serviceRunning;
+  }
 
   void updateFrequency(int newFrequency) {
     _settings.updateFrequency = newFrequency;
@@ -52,13 +62,13 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deduplicateOnLastUpdate(bool enabled) {
-    _settings.deduplicateOnLastUpdate = enabled;
+  void toggleDeduplicateOnLastUpdate() {
+    _settings.uiDeduplicateOnLastUpdate = !_settings.uiDeduplicateOnLastUpdate;
     notifyListeners();
   }
 
   void maxEntryCount(int maxEntryCount) {
-    _settings.maxEntryCount = maxEntryCount;
+    _settings.maxDataEntryCount = maxEntryCount;
     notifyListeners();
   }
 

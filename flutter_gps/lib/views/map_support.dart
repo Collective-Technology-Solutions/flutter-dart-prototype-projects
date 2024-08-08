@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -27,6 +29,13 @@ List<Marker> buildMarkers(GeoLocationCacheProvider cachedLocations,
   ));
   return results;
 }
+
+String positionAsJson( Position position ) {
+  final StringBuffer buffer = StringBuffer();
+  buffer.write( JsonEncoder.withIndent('  ').convert(position.toJson() ) );
+  return buffer.toString();
+}
+
 
 double zoomForCurrent(Position? position) {
   double accuracy = position!.accuracy;
