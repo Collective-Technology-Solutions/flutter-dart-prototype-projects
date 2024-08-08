@@ -52,21 +52,21 @@ String positionAsUrl( Position position ) {
 }
 
 double zoomForCurrent(Position? position) {
-  double accuracy = position!.accuracy;
   double result = 13.0;
-  if (accuracy < 10) {
+  if ( position == null) return result;
+  double accuracy = position!.accuracy;
+  if (accuracy <= 5) {
+    result = 2;
+  } else if (accuracy <= 20) {
     result = 5;
-  } else if (accuracy < 20) {
+  } else if (accuracy <= 50) {
     result = 8;
-  } else if (accuracy < 40) {
+  } else if (accuracy <= 75) {
     result = 10;
-  } else if (accuracy < 60) {
-    result = 13;
-  } else if (accuracy < 80) {
-    result = 15;
-  } else if (accuracy < 90) {
-    result = 18;
+  } else if (accuracy <= 100) {
+    result = 12;
   }
+  else result = 18;
 
   final Logger logger = Logger('zoomForCurrent');
   logger.info("zoomForCurrent >>> ${accuracy}, $result");

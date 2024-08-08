@@ -50,6 +50,12 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
               ? geoLocationCache.getCurrentAsLatLgn()
               : const LatLng(0, 0),
           initialZoom: (settings.zoomOnAccuracy) ? zoomForCurrent(geoLocationCache!.latest) : 13.0,
+          onMapEvent: (p0) {
+            print( p0 );
+          },
+          onTap:(tapPosition, point)  {
+            //TODO recenter display
+          },
         ),
         children: [
           TileLayer(
