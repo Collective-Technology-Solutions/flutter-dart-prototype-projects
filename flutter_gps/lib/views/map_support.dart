@@ -22,11 +22,13 @@ List<Marker> buildMarkers(GeoLocationCacheProvider cachedLocations,
       ),
     );
   }).toList();
-  var last = results.removeLast();
-  results.add(Marker(
-    point: last.point,
-    child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
-  ));
+  if ( results.isNotEmpty ) {
+    var last = results.removeLast();
+    results.add(Marker(
+      point: last.point,
+      child: const Icon(Icons.location_pin, color: Colors.red, size: 40),
+    ));
+  }
   return results;
 }
 

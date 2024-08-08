@@ -49,11 +49,11 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
           initialCenter: geoLocationCache.latest != null
               ? geoLocationCache.getCurrentAsLatLgn()
               : const LatLng(0, 0),
-          initialZoom: (settings.zoomOnAccuracy) ? zoomForCurrent(geoLocationCache.latest) : 13.0,
+          initialZoom: (settings.zoomOnAccuracy) ? zoomForCurrent(geoLocationCache!.latest) : 13.0,
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // domains are deprecated
             tileProvider: CachedTileProvider(cacheManager: cacheManager),
             errorTileCallback: (tile, error, stackTrace) => Center(child: Text('Failed to load map tiles ${error}.'))
           ),

@@ -33,8 +33,8 @@ class LeafletView extends StatelessWidget {
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            // subdomains: ['a', 'b', 'c'],
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            // subdomains: ['a', 'b', 'c'],  //deprecated
             tileProvider: CachedTileProvider(cacheManager: cacheManager),
             errorTileCallback: (tile, error, stackTrace) => Center(child: Text('Failed to load map tiles ${error}.'))
           ),
