@@ -30,12 +30,24 @@ List<Marker> buildMarkers(GeoLocationCacheProvider cachedLocations,
   return results;
 }
 
+//TODO: Fix me
 String positionAsJson( Position position ) {
   final StringBuffer buffer = StringBuffer();
-  buffer.write( JsonEncoder.withIndent('  ').convert(position.toJson() ) );
+  var json=position.toJson();
+  // json["url"] = positionAsUrl(position);
+  // json['id'] = getUserId();
+  buffer.write( JsonEncoder.withIndent('  ').convert(json) );
   return buffer.toString();
 }
 
+//TODO: Fix me
+String positionAsUrl( Position position ) {
+  String domain="a";
+  double z = zoomForCurrent(position);
+  double x = position.latitude;
+  double y = position.longitude;
+  return 'https://${domain}.tile.openstreetmap.org/${z}/${x}/${y}.png';
+}
 
 double zoomForCurrent(Position? position) {
   double accuracy = position!.accuracy;

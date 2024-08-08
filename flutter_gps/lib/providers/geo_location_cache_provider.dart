@@ -57,14 +57,14 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     _positionCache.updateSettings(_settings);
     if (!_settings.serviceRunning) return;
     try {
-      fetchLocation();
+      _fetchLocation();
     } catch (e) {
       _logger.severe(e);
     }
   }
 
-  //TODO this method should be made private again so we do not have uncontrolled task scheduling
-  Future<void> fetchLocation() async {
+  //Note: this method should be kept private again so we do not have uncontrolled task scheduling from the UI
+  Future<void> _fetchLocation() async {
     try {
       final location = await _getCurrentLocation();
       add(location);
@@ -75,7 +75,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
       if (_settings.serviceRunning) {
         _logger.fine( 'fetchLocation scheduled.');
         Future.delayed(
-            Duration(seconds: _settings.updateFrequency), fetchLocation);
+            Duration(seconds: _settings.updateFrequency), _fetchLocation);
       }
     }
   }
