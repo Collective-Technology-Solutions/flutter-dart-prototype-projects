@@ -27,7 +27,7 @@ class CurrentGPSPositionView extends StatelessWidget {
           children: <Widget>[
             if (currentPosition != null)
               Text(
-                "LAT: ${currentPosition!.latitude}, LNG: ${currentPosition!.longitude}",
+                "LAT: ${currentPosition!.latitude},\nLNG: ${currentPosition!.longitude},\nALT: ${currentPosition!.altitude}\nACC: ${currentPosition!.accuracy}\nSPE: ${currentPosition!.speed}",
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             const SizedBox(height: 20),

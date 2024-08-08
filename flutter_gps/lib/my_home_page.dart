@@ -6,13 +6,14 @@ import 'package:flutter_gps/providers/desktop_geo_location_provider.dart';
 import 'package:flutter_gps/providers/geo_location_provider.dart';
 import 'package:flutter_gps/providers/mobile_geo_location_provider.dart';
 import 'package:flutter_gps/providers/web_geo_location_provider.dart';
+import 'package:flutter_gps/views/app_settings.dart';
 import 'package:flutter_gps/views/current_gps_position_view.dart';
 import 'package:flutter_gps/views/gps_history_view.dart';
-import 'package:flutter_gps/views/leaflet_map_view.dart';
 import 'package:flutter_gps/views/openstreetmap_map_view.dart';
+import 'package:flutter_gps/views/settings_screen.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
-// import 'providers/geo_location_provider.dart';
+import 'package:provider/provider.dart';
+
 import 'geo_location_cache.dart';
 import 'logger.dart';
 
@@ -33,6 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _geoProvider = _createGeoLocationProvider();
     _startLocationUpdates();
+  }
+
+  @override
+  void dispose() {
+    _cache.dispose();
+    super.dispose();
   }
 
   GeoLocationProvider _createGeoLocationProvider() {
@@ -66,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context).settings;
+    _cache.setSettingsProvider( settings );
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -73,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text("Geolocation App"),
           bottom: TabBar(
             tabs: [
+              Tab(text: "Settings"),
               Tab(text: "Current GPS Position"),
               Tab(text: "GPS History"),
               Tab(text: "OpenStreetMap"),
@@ -82,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: TabBarView(
           children: [
+            SettingsScreen(),
             CurrentGPSPositionView(
               currentPosition: _currentPosition,
               cache: _cache,
