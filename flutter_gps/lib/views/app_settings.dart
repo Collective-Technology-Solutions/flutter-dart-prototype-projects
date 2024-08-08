@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppSettings {
   int updateFrequency; // in seconds
   bool isFinePrecision;
-  int ignoreRadius; // in meters
+  double ignoreRadius; // in meters
   bool zoomOnAccuracy;
   int cacheExpirationDays; // in days
   bool deduplicateOnLastUpdate;
@@ -37,7 +37,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateIgnoreRadius(int newRadius) {
+  void updateIgnoreRadius(double newRadius) {
     _settings.ignoreRadius = newRadius;
     notifyListeners();
   }

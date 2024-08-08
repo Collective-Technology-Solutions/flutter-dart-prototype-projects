@@ -10,6 +10,7 @@ import 'package:flutter_gps/views/openstreetmap_map_view.dart';
 import 'package:flutter_gps/views/settings_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
 import 'providers/geo_location_cache_provider.dart';
 
@@ -20,21 +21,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // final Logger _logger = Logger('MyHomePage');
-  late GeoLocationCacheProvider _cache;
 
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
   void dispose() {
-    _cache.dispose();
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    geoLocationCache.stopService();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    //TODO: put this on a toggle switch
+    geoLocationCache.startService();
+
     final tabs = _createTabs();
     return DefaultTabController(
       length: 4,

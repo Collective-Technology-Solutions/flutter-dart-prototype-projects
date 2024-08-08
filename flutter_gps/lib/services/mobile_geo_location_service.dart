@@ -1,8 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:logging/logging.dart';
-import 'geo_location_provider.dart';
+import 'geo_location_service.dart';
 
-class MobileGeoLocationProvider implements GeoLocationProvider {
+class MobileGeoLocationService implements GeoLocationService {
   final Logger _logger = Logger('MobileGeoLocationProvider');
   
   @override

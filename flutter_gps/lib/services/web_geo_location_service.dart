@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
-import 'geo_location_provider.dart';
+import 'geo_location_service.dart';
 
-class WebGeoLocationProvider implements GeoLocationProvider {
+class WebGeoLocationService implements GeoLocationService {
 
   //TODO: to plug in settings.isFinePrecision
   @override

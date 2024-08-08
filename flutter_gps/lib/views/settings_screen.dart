@@ -64,16 +64,27 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(height: 16),
 
 
+            // Toggle for precision
+            Text('Sequential Duplicates'),
+            SwitchListTile(
+              title: Text('Ignore Sequential Duplicates Updates'),
+              value: settingsProvider.settings.deduplicateOnLastUpdate,
+              onChanged: (value) {
+                settingsProvider.togglePrecision();
+              },
+            ),
+            SizedBox(height: 16),
+
             // Spinner control for ignore radius
             Text('Ignore updates inside radius (meters)'),
-            DropdownButton<int>(
+            DropdownButton<double>(
               value: settingsProvider.settings.ignoreRadius,
               onChanged: (newValue) {
                 settingsProvider.updateIgnoreRadius(newValue!);
               },
               items: List.generate(11, (index) => index)
-                  .map((value) => DropdownMenuItem<int>(
-                value: value,
+                  .map((value) => DropdownMenuItem<double>(
+                value: value.toDouble(),
                 child: Text(value.toString()),
               ))
                   .toList(),

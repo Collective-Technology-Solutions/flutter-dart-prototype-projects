@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 
-abstract class GeoLocationProvider {
+abstract class GeoLocationService {
   //TODO: to plug in settings.isFinePrecision
   Future<Position> getCurrentLocation();
 }

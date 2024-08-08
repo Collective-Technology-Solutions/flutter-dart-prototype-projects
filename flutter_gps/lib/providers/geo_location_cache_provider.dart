@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_gps/providers/geo_location_provider.dart';
-import 'package:flutter_gps/providers/web_geo_location_provider.dart';
+import 'package:flutter_gps/services/geo_location_service.dart';
+import 'package:flutter_gps/services/web_geo_location_service.dart';
 import 'package:flutter_gps/views/app_settings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
-import 'desktop_geo_location_provider.dart';
-import 'mobile_geo_location_provider.dart';
+import '../services/desktop_geo_location_service.dart';
+import '../services/mobile_geo_location_service.dart';
 
 class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
   final Logger _logger = Logger('GeoLocationCacheProvider');
   late AppSettings _settings;
-  late GeoLocationProvider _provider;
+  late GeoLocationService _provider;
   late _PositionCache _positionCache;
   final PositionCacheUtils _positionCacheUtils = PositionCacheUtils();
 
@@ -51,17 +51,31 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
 
   void updateSettings(AppSettings settings) {
     this._settings = settings;
-    _provider = _createGeoLocationProvider() as GeoLocationProvider;
+    _provider = _createGeoLocationProvider() as GeoLocationService;
   }
 
   Future<void> startService() async {
+    _positionCache.updateSettings(_settings);
+    if (_runService) return; //already running
     try {
-      _positionCache.updateSettings(_settings);
       _runService = true;
-      Future.delayed(
-          Duration(seconds: _settings.updateFrequency), fetchLocation);
+      fetchLocation();
     } catch (e) {
       _logger.severe(e);
+    }
+  }
+
+  Future<void> fetchLocation() async {
+    try {
+      final location = await _getCurrentLocation();
+      add(location);
+      notifyListeners();
+    } catch (e) {
+      _logger.severe(e);
+    } finally {
+      if (_runService)
+        Future.delayed(
+            Duration(seconds: _settings.updateFrequency), fetchLocation);
     }
   }
 
@@ -114,26 +128,14 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     return _positionCache.isNotEmpty();
   }
 
-  GeoLocationProvider _createGeoLocationProvider() {
+  GeoLocationService _createGeoLocationProvider() {
     if (kIsWeb) {
-      return WebGeoLocationProvider();
+      return WebGeoLocationService();
     } else if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.android) {
-      return MobileGeoLocationProvider();
+      return MobileGeoLocationService();
     } else {
-      return DesktopGeoLocationProvider();
-    }
-  }
-
-  Future<void> fetchLocation() async {
-    try {
-      final location = await _getCurrentLocation();
-      add(location);
-      notifyListeners();
-    } catch (e) {
-      _logger.severe(e);
-    } finally {
-      if (_runService) startService();
+      return DesktopGeoLocationService();
     }
   }
 
@@ -156,7 +158,7 @@ abstract class PositionCache {
 }
 
 class _PositionCache implements PositionCache {
-  int _ignoreRadius = 0;
+  double _ignoreRadius = 0.0;
   int _maxSize = 100;
 
   final List<Position> _locations = [];
@@ -174,9 +176,13 @@ class _PositionCache implements PositionCache {
           calculateDistance(_locations.last, location);
       // print("Add/Distance: ${distanceInMeters.toStringAsFixed(2)} meters");
 
-      if (distanceInMeters >= _ignoreRadius) _locations.add(location);
-    } else
-      _locations.add(location);
+      if (distanceInMeters >= _ignoreRadius) {
+        _locations.add(location);
+      }
+      // else
+      // _locations.add(location);
+    }
+    else _locations.add(location);
   }
 
   @override
