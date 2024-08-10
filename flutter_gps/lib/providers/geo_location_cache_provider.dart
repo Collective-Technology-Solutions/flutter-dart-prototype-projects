@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_gps/models/app_settings.dart';
 import 'package:flutter_gps/services/geo_location_service.dart';
 import 'package:flutter_gps/services/web_geo_location_service.dart';
 import 'package:flutter_gps/views/app_settings.dart';
@@ -18,7 +19,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
 
   GeoLocationCacheProvider() {
     _positionCache = _PositionCache();
-    _provider = _createGeoLocationProvider();
+    // _provider = _createGeoLocationProvider();
   }
 
   @override
@@ -75,7 +76,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
       if (_settings.serviceRunning) {
         _logger.fine( 'fetchLocation scheduled.');
         Future.delayed(
-            Duration(seconds: _settings.updateFrequency), _fetchLocation);
+            Duration(seconds: _settings.updateFrequencySeconds), _fetchLocation);
       }
     }
   }
@@ -142,7 +143,7 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
   }
 
   Future<Position> _getCurrentLocation() async {
-    return await _provider.getCurrentLocation();
+    return await _provider.getCurrentLocation(_settings.locationAccuracy);
   }
 }
 
@@ -241,7 +242,7 @@ class _PositionCache implements PositionCache {
 
   void updateSettings(AppSettings settings) {
     _ignoreRadius = settings.ignoreRadius;
-    _maxSize = settings.maxDataEntryCount;
+    _maxSize = settings.uiMaxDataEntryCount;
   }
 
   @override

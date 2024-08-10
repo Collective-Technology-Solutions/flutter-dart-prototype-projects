@@ -5,7 +5,7 @@ class WebGeoLocationService implements GeoLocationService {
 
   //TODO: to plug in settings.isFinePrecision
   @override
-  Future<Position> getCurrentLocation() async {
+  Future<Position> getCurrentLocation(LocationAccuracy locationAccuracy) async {
     // Web implementation may vary. This is a placeholder.
     throw UnimplementedError("Web geolocation is not implemented.");
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gps/views/app_settings.dart';
 import 'package:flutter_gps/views/current_gps_position_view.dart';
 import 'package:flutter_gps/views/gps_history_view.dart';
+import 'package:flutter_gps/views/movement_session_list_view.dart';
 import 'package:flutter_gps/views/openstreetmap_map_view.dart';
 import 'package:flutter_gps/views/settings_screen.dart';
 import 'package:geolocator/geolocator.dart';
@@ -74,9 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<Tab, Widget> _createTabs() {
     return Map.from({
       const Tab(text: "Settings"): const SettingsScreen(),
-      const Tab(text: "Current GPS Position"): const CurrentGPSPositionView(),
-      const Tab(text: "GPS History"): const GPSHistoryView(),
+      // const Tab(text: "Position"): const CurrentGPSPositionView(),
+      const Tab(text: "History"): const GPSHistoryView(),
       const Tab(text: "OpenStreetMap"): const OpenStreetMapView(),
+      const Tab(text: "Overview"): MovementSessionListView(), //TODO convert to true StatelessWidget
       // Tab(text: "Leaflet") : LeafletView(),
     });
   }

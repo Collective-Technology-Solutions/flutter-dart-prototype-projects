@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gps/utils/map_support.dart';
 import 'package:flutter_gps/views/app_settings.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -12,82 +14,130 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
 
+    double fieldPadding = 1;
+    double baseFont = 14.0;
+
+    TextStyle groupTextStyle = TextStyle(
+      fontSize: baseFont + 6,
+      // color: Colors.blue,
+      fontWeight: FontWeight.bold,
+    );
+    TextStyle toggleTextStyle = TextStyle(
+      fontSize: baseFont,
+      // color: Colors.blue,
+      // fontWeight: FontWeight.bold,
+    );
+    TextStyle fieldTextStyle = TextStyle(
+      fontSize: baseFont,
+      // color: Colors.blue,
+      // fontWeight: FontWeight.bold,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Data', style: groupTextStyle),
 
-            // Toggle for zoom on accuracy
-            SwitchListTile(
-              title: const Text('Update Zoom on Accuracy'),
-              value: settingsProvider.settings.zoomOnAccuracy,
-              onChanged: (value) {
-                settingsProvider.toggleZoomOnAccuracy();
+            // Toggle for precision
+            DropdownButton<LocationAccuracy>(
+              value: settingsProvider.settings.locationAccuracy,
+              onChanged: (LocationAccuracy? newValue) {
+                settingsProvider.updateLocationAccuracy(newValue!);
               },
+              items: LocationAccuracy.values.map((LocationAccuracy accuracy) {
+                return DropdownMenuItem<LocationAccuracy>(
+                  value: accuracy,
+                  child: Text(accuracy.toString()),
+                );
+              }).toList(),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: fieldPadding),
 
             // Spinner control for update frequency
-            const Text('Update Data Frequency (seconds)'),
+            Text(
+              'Data Cache Expiration (days)',
+              style: fieldTextStyle,
+            ),
             DropdownButton<int>(
-              value: settingsProvider.settings.updateFrequency,
+              value: settingsProvider.settings.cacheExpirationDays,
               onChanged: (newValue) {
-                settingsProvider.updateFrequency(newValue!);
+                settingsProvider.updateCacheExpirationDays(newValue!);
+              },
+              items: List.generate(30, (index) => index + 1)
+                  .map((value) => DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      ))
+                  .toList(),
+            ),
+            SizedBox(height: fieldPadding),
+
+            // Spinner control for cache item max count
+            Text(
+              'Data Cache Max Count',
+              style: fieldTextStyle,
+            ),
+            DropdownButton<int>(
+              value: settingsProvider.settings.cacheExpirationMaxCount,
+              onChanged: (newValue) {
+                settingsProvider.updateCacheExpirationMaxCount(newValue!);
+              },
+              items: List.generate(10, (index) => index * 100)
+                  .map((value) => DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      ))
+                  .toList(),
+            ),
+
+            Text(
+              'UI',
+              style: groupTextStyle,
+            ),
+
+            SwitchListTile(
+              title: Text(
+                'Use Imperial Measurements',
+                style: toggleTextStyle,
+              ),
+              value: settingsProvider.settings.useImperial,
+              // contentPadding: EdgeInsets.symmetric(horizontal: 0.0), // Adjust horizontal padding
+              onChanged: (value) {
+                settingsProvider.useImperial(value);
+              },
+            ),
+            SizedBox(height: fieldPadding),
+
+            // Spinner control for update frequency
+            Text(
+              'Update Data Frequency (seconds)',
+              style: fieldTextStyle,
+            ),
+            DropdownButton<int>(
+              value: settingsProvider.settings.updateFrequencySeconds,
+              onChanged: (newValue) {
+                settingsProvider.updateFrequencySeconds(newValue!);
               },
               items: List.generate(120, (index) => index + 1)
                   .map((value) => DropdownMenuItem<int>(
-                value: value,
-                child: Text(value.toString()),
-              ))
+                        value: value,
+                        child: Text(value.toString()),
+                      ))
                   .toList(),
             ),
-            const SizedBox(height: 16),
-
-            // Spinner control for update frequency
-            const Text('Max Data Tracked'),
-            DropdownButton<int>(
-              value: settingsProvider.settings.maxDataEntryCount,
-              onChanged: (newValue) {
-                settingsProvider.updateFrequency(newValue!);
-              },
-              items: List.generate(100, (index) => index * 10)
-                  .map((value) => DropdownMenuItem<int>(
-                value: value,
-                child: Text(value.toString()),
-              ))
-                  .toList(),
-            ),
-            const SizedBox(height: 16),
-
-            // Toggle for precision
-            const Text('Data Precision'),
-            SwitchListTile(
-              title: const Text('Fine Precision'),
-              value: settingsProvider.settings.isFinePrecision,
-              onChanged: (value) {
-                settingsProvider.togglePrecision();
-              },
-            ),
-            const SizedBox(height: 16),
-
-            // Toggle for precision
-            const Text('Sequential UI Duplicates'),
-            SwitchListTile(
-              title: const Text('Ignore Duplicates UI Updates'),
-              value: settingsProvider.settings.uiDeduplicateOnLastUpdate,
-              onChanged: (value) {
-                settingsProvider.toggleDeduplicateOnLastUpdate();
-              },
-            ),
-            const SizedBox(height: 16),
+            SizedBox(height: fieldPadding),
 
             // Spinner control for ignore radius
-            const Text('Ignore Data Updates Within Radius (meters)'),
+            Text(
+              'Ignore Data Updates Within Radius (meters)',
+              style: fieldTextStyle,
+            ),
             DropdownButton<double>(
               value: settingsProvider.settings.ignoreRadius,
               onChanged: (newValue) {
@@ -95,44 +145,57 @@ class SettingsScreen extends StatelessWidget {
               },
               items: List.generate(11, (index) => index)
                   .map((value) => DropdownMenuItem<double>(
-                value: value.toDouble(),
-                child: Text(value.toString()),
-              ))
+                        value: value.toDouble(),
+                        child: Text(value.toString()),
+                      ))
                   .toList(),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: fieldPadding),
+
+            // Toggle for precision
+            SwitchListTile(
+              title: Text(
+                'Surpess Duplicates UI Updates',
+                style: toggleTextStyle,
+              ),
+              value: settingsProvider.settings.uiIgnoreDeplicatesOnLastUpdate,
+              onChanged: (value) {
+                settingsProvider.toggleUIIgnoreDeplicatesOnLastUpdate();
+              },
+            ),
+            SizedBox(height: fieldPadding),
 
             // Spinner control for update frequency
-            const Text('Data Cache Expiration (days)'),
+            Text(
+              'Max Data Tracked',
+              style: fieldTextStyle,
+            ),
             DropdownButton<int>(
-              value: settingsProvider.settings.cacheExpirationDays,
+              value: settingsProvider.settings.uiMaxDataEntryCount,
               onChanged: (newValue) {
-                settingsProvider.cacheExpiration(newValue!);
+                settingsProvider.updateUIMaxDataEntryCount(newValue!);
               },
-              items: List.generate(30, (index) => index + 1)
+              items: List.generate(100, (index) => index * 10)
                   .map((value) => DropdownMenuItem<int>(
-                value: value,
-                child: Text(value.toString()),
-              ))
+                        value: value,
+                        child: Text(value.toString()),
+                      ))
                   .toList(),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: fieldPadding),
 
-            // Spinner control for cache item max count
-            const Text('Data Cache Max Items'),
-            DropdownButton<int>(
-              value: settingsProvider.settings.maxNrOfCacheObjects,
-              onChanged: (newValue) {
-                settingsProvider.cacheExpiration(newValue!);
+            // Toggle for zoom on accuracy
+            SwitchListTile(
+              title: Text(
+                'Update Zoom on Accuracy',
+                style: toggleTextStyle,
+              ),
+              value: settingsProvider.settings.zoomOnAccuracy,
+              onChanged: (value) {
+                settingsProvider.toggleZoomOnAccuracy();
               },
-              items: List.generate(10, (index) => index * 100)
-                  .map((value) => DropdownMenuItem<int>(
-                value: value,
-                child: Text(value.toString()),
-              ))
-                  .toList(),
             ),
-
+            SizedBox(height: fieldPadding),
           ],
         ),
       ),

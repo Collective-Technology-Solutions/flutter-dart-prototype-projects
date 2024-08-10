@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gps/views/app_settings.dart';
-import 'package:flutter_gps/views/map_support.dart';
+import 'package:flutter_gps/utils/map_support.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';
@@ -18,7 +18,7 @@ class GPSHistoryView extends StatelessWidget {
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
 
     List<Position> locations;
-    if (settings.uiDeduplicateOnLastUpdate) {
+    if (settings.uiIgnoreDeplicatesOnLastUpdate) {
       locations = geoLocationCache.getOverView();
     } else {
       locations = geoLocationCache.getAll();

@@ -7,6 +7,44 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
 
+
+enum LocationPrecision {
+  high, // High precision (fine)
+  medium, // Medium precision
+  low, // Low precision (coarse)
+  veryLow, // Very low precision
+}
+
+extension LocationPrecisionExtension on LocationPrecision {
+  String get description {
+    switch (this) {
+      case LocationPrecision.high:
+        return 'High Precision';
+      case LocationPrecision.medium:
+        return 'Medium Precision';
+      case LocationPrecision.low:
+        return 'Low Precision';
+      case LocationPrecision.veryLow:
+        return 'Very Low Precision';
+      default:
+        return '';
+    }
+  }
+
+  LocationAccuracy get accuracy {
+    switch (this) {
+      case LocationPrecision.high:
+        return LocationAccuracy.high;
+      case LocationPrecision.medium:
+        return LocationAccuracy.medium;
+      case LocationPrecision.low:
+        return LocationAccuracy.low;
+      case LocationPrecision.veryLow:
+        return LocationAccuracy.low; // or another appropriate setting
+    }
+  }
+}
+
 List<Marker> buildMarkers(GeoLocationCacheProvider cachedLocations,
     [List<Position> Function()? filter]) {
   List<LatLng> locations = cachedLocations

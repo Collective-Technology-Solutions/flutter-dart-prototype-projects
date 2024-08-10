@@ -5,7 +5,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gps/providers/TileCacheManagerProvider.dart';
 import 'package:flutter_gps/providers/cached_tile_provider.dart';
 import 'package:flutter_gps/views/app_settings.dart';
-import 'package:flutter_gps/views/map_support.dart';
+import 'package:flutter_gps/utils/map_support.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
 import '../providers/geo_location_cache_provider.dart';

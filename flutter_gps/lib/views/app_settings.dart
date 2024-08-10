@@ -1,28 +1,6 @@
 import 'package:flutter/material.dart';
-
-class AppSettings {
-  bool serviceRunning;
-  int updateFrequency; // in seconds
-  bool isFinePrecision;
-  double ignoreRadius; // in meters
-  bool zoomOnAccuracy;
-  int cacheExpirationDays; // in days
-  bool uiDeduplicateOnLastUpdate;
-  int maxDataEntryCount;
-  int maxNrOfCacheObjects;
-
-  AppSettings({
-    this.serviceRunning = false,
-    this.updateFrequency = 3,
-    this.isFinePrecision = false,
-    this.ignoreRadius = 1,
-    this.zoomOnAccuracy = false,
-    this.cacheExpirationDays = 7,
-    this.uiDeduplicateOnLastUpdate = true,
-    this.maxDataEntryCount = 100,
-    this.maxNrOfCacheObjects = 500,
-  });
-}
+import 'package:flutter_gps/models/app_settings.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SettingsProvider extends ChangeNotifier {
   final AppSettings _settings = AppSettings();
@@ -31,19 +9,21 @@ class SettingsProvider extends ChangeNotifier {
 
   void updateServiceRunning(bool run ) {
     _settings.serviceRunning = run;
+    notifyListeners();
+  }
+
+  void updateLocationAccuracy( LocationAccuracy locationAccuracy ) {
+    _settings.locationAccuracy = locationAccuracy;
+    notifyListeners();
   }
 
   void toogleServiceRunning() {
     _settings.serviceRunning = !_settings.serviceRunning;
-  }
-
-  void updateFrequency(int newFrequency) {
-    _settings.updateFrequency = newFrequency;
     notifyListeners();
   }
 
-  void togglePrecision() {
-    _settings.isFinePrecision = !_settings.isFinePrecision;
+  void updateFrequencySeconds(int newFrequency) {
+    _settings.updateFrequencySeconds = newFrequency;
     notifyListeners();
   }
 
@@ -57,23 +37,28 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void cacheExpiration(int days) {
+  void updateCacheExpirationDays(int days) {
     _settings.cacheExpirationDays = days;
     notifyListeners();
   }
 
-  void toggleDeduplicateOnLastUpdate() {
-    _settings.uiDeduplicateOnLastUpdate = !_settings.uiDeduplicateOnLastUpdate;
+  void toggleUIIgnoreDeplicatesOnLastUpdate() {
+    _settings.uiIgnoreDeplicatesOnLastUpdate = !_settings.uiIgnoreDeplicatesOnLastUpdate;
     notifyListeners();
   }
 
-  void maxEntryCount(int maxEntryCount) {
-    _settings.maxDataEntryCount = maxEntryCount;
+  void updateUIMaxDataEntryCount(int maxEntryCount) {
+    _settings.uiMaxDataEntryCount = maxEntryCount;
     notifyListeners();
   }
 
-  void maxNrOfCacheObjects(int maxNrOfCacheObjects) {
-    _settings.maxNrOfCacheObjects = maxNrOfCacheObjects;
+  void updateCacheExpirationMaxCount(int maxNrOfCacheObjects) {
+    _settings.cacheExpirationMaxCount = maxNrOfCacheObjects;
+    notifyListeners();
+  }
+
+  void useImperial( bool useImperial ) {
+    _settings.useImperial = useImperial;
     notifyListeners();
   }
 }
