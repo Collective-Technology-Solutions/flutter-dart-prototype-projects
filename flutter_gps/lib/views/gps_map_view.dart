@@ -11,7 +11,7 @@ class GPSMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);  // to send update notifications via methods
     final position = geoLocationCache.latest;
 
     return Scaffold(

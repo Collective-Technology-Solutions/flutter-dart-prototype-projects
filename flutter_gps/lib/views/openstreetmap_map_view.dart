@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_gps/providers/TileCacheManagerProvider.dart';
+import 'package:flutter_gps/providers/CacheManagerProvider.dart';
 import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
 import 'package:flutter_gps/providers/cached_tile_provider.dart';
-import 'package:flutter_gps/views/app_settings.dart';
+import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:flutter_gps/utils/map_support.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -36,9 +36,9 @@ class _OpenStreetMapViewState extends State<OpenStreetMapView> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context).settings;
-    final cacheManager = Provider.of<TileCacheManagerProvider>(context).cacheManager;
-    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
+    final settings = Provider.of<SettingsProvider>(context).settings; // for read only
+    final cacheManager = Provider.of<CacheManagerProvider>(context).cacheManager; // for read only
+    final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);  // to send update notifications via methods
 
     return Scaffold(
       appBar: AppBar(

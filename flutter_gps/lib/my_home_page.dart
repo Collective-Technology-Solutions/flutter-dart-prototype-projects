@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gps/views/app_settings.dart';
+import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:flutter_gps/views/current_gps_position_view.dart';
 import 'package:flutter_gps/views/gps_history_view.dart';
 import 'package:flutter_gps/views/movement_session_list_view.dart';
@@ -35,14 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context).settings;
+    final settingsProvider = Provider.of<SettingsProvider>(context); // to send events
+    final settings = settingsProvider.settings; // for read only
     final geoLocationCache = Provider.of<GeoLocationCacheProvider>(context);
-
-    bool _isToggled = settings.serviceRunning; // State for the toggle button
 
     final tabs = _createTabs();
     return DefaultTabController(
-      length: 4,
+      length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Geolocation App"),
@@ -55,11 +54,10 @@ class _MyHomePageState extends State<MyHomePage> {
               value: settings.serviceRunning,
               onChanged: (value) {
                 setState(() {
-                  settings.serviceRunning = value;
+                  settingsProvider.updateServiceRunning( value );
                   if ( settings.serviceRunning )
                     geoLocationCache.startService();
                   else geoLocationCache.stopService();
-                  print( "Service Running set to: ${settings.serviceRunning}");
                 });
               },
             ),
@@ -75,10 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<Tab, Widget> _createTabs() {
     return Map.from({
       const Tab(text: "Settings"): const SettingsScreen(),
-      // const Tab(text: "Position"): const CurrentGPSPositionView(),
+      const Tab(text: "Position"): const CurrentGPSPositionView(),
       const Tab(text: "History"): const GPSHistoryView(),
       const Tab(text: "OpenStreetMap"): const OpenStreetMapView(),
-      const Tab(text: "Overview"): MovementSessionListView(), //TODO convert to true StatelessWidget
+      const Tab(text: "Overview"): MovementSessionListView(),
       // Tab(text: "Leaflet") : LeafletView(),
     });
   }

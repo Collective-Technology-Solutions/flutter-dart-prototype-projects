@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_gps/models/app_settings.dart';
 import 'package:flutter_gps/services/geo_location_service.dart';
 import 'package:flutter_gps/services/web_geo_location_service.dart';
-import 'package:flutter_gps/views/app_settings.dart';
+import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
@@ -145,6 +145,11 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
   Future<Position> _getCurrentLocation() async {
     return await _provider.getCurrentLocation(_settings.locationAccuracy);
   }
+
+  @override
+  List<Position> transferAndReset() {
+    return _positionCache.transferAndReset();
+  }
 }
 
 abstract class PositionCache {
@@ -157,6 +162,7 @@ abstract class PositionCache {
   double calculateDistance(Position pos1, Position pos2);
   bool isEmpty();
   bool isNotEmpty();
+  List<Position> transferAndReset();
   void clear();
 }
 
@@ -164,7 +170,7 @@ class _PositionCache implements PositionCache {
   double _ignoreRadius = 0.0;
   int _maxSize = 100;
 
-  final List<Position> _locations = [];
+  List<Position> _locations = [];
 
   @override
   Position? get latest => _locations.isNotEmpty ? _locations.last : null;
@@ -258,6 +264,13 @@ class _PositionCache implements PositionCache {
   @override
   void clear() {
     _locations.clear();
+  }
+
+  @override
+  List<Position> transferAndReset() {
+    final transferOwnership = this._locations;
+    this._locations = [];
+    return transferOwnership;
   }
 }
 

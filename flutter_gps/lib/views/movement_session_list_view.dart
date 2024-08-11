@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gps/models/movement_session.dart';
+import 'package:flutter_gps/providers/movement_session_provider.dart';
 import 'package:flutter_gps/sample_data/movement_session_support.dart';
 import 'package:flutter_gps/utils/movement_support.dart';
-import 'package:flutter_gps/views/app_settings.dart';
+import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:provider/provider.dart';
 
 class MovementSessionListView extends StatefulWidget {
@@ -14,17 +15,17 @@ class MovementSessionListView extends StatefulWidget {
 }
 
 class _MovementSessionListViewState extends State<MovementSessionListView> {
-  late List<MovementSession> _sessions;
+  // late List<MovementSession> _sessions;
 
   @override
   void initState() {
     super.initState();
     // Initialize or fetch sessions
-    _sessions = [
-      createSampleSession(MovementType.walking),
-      createSampleSession(MovementType.running),
-      createSampleSession(MovementType.bicycling)
-    ];
+    // _sessions = [
+    //   createSampleSession(MovementType.walking),
+    //   createSampleSession(MovementType.running),
+    //   createSampleSession(MovementType.bicycling)
+    // ];
     // Generate metrics for each session
     // List<Map<String, dynamic>> metricsList = _sessions.map((session) {
     //   return generateMovementMetrics(session);
@@ -33,8 +34,12 @@ class _MovementSessionListViewState extends State<MovementSessionListView> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context).settings;
+    final settingsProvider = Provider.of<SettingsProvider>(context); // to send update notifications via methods
+    final settings = settingsProvider.settings; // for ready only
+    final motionSessionProvider = Provider.of<MovementSessionProvider>(context);  // to send update notifications via methods
     bool useImperial = settings.useImperial;
+
+    final List<MovementSession> sessions = motionSessionProvider.sessions;
 
     double baseFont = 14.0;
     TextStyle keyStyle = TextStyle(
@@ -53,8 +58,9 @@ class _MovementSessionListViewState extends State<MovementSessionListView> {
         title: const Text('Movement Sessions'),
       ),
       body: ListView(
-        children: _sessions.map((session) {
+        children: sessions.map((session) {
           final metrics = generateMovementMetrics(session);
+          // if (metrics.isEmpty) return ExpansionTile( title: Text("error with Metrics"));
           return ExpansionTile(
             title: Text('Session ${session.name} (${metrics['totalDistance'].toStringAsFixed(2)})'),
             subtitle: Text('Movement Type: ${metrics['movementType'].toString()}'),

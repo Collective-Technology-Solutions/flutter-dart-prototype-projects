@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gps/utils/map_support.dart';
-import 'package:flutter_gps/views/app_settings.dart';
+import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +12,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsProvider = Provider.of<SettingsProvider>(context);
-
+    final settingsProvider = Provider.of<SettingsProvider>(context);  // to send update notifications via methods
+    final settings = settingsProvider.settings; // for read only
+    
     double fieldPadding = 1;
     double baseFont = 14.0;
 
@@ -46,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
 
             // Toggle for precision
             DropdownButton<LocationAccuracy>(
-              value: settingsProvider.settings.locationAccuracy,
+              value: settings.locationAccuracy,
               onChanged: (LocationAccuracy? newValue) {
                 settingsProvider.updateLocationAccuracy(newValue!);
               },
@@ -65,7 +66,7 @@ class SettingsScreen extends StatelessWidget {
               style: fieldTextStyle,
             ),
             DropdownButton<int>(
-              value: settingsProvider.settings.cacheExpirationDays,
+              value: settings.cacheExpirationDays,
               onChanged: (newValue) {
                 settingsProvider.updateCacheExpirationDays(newValue!);
               },
@@ -84,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
               style: fieldTextStyle,
             ),
             DropdownButton<int>(
-              value: settingsProvider.settings.cacheExpirationMaxCount,
+              value: settings.cacheExpirationMaxCount,
               onChanged: (newValue) {
                 settingsProvider.updateCacheExpirationMaxCount(newValue!);
               },
@@ -106,7 +107,7 @@ class SettingsScreen extends StatelessWidget {
                 'Use Imperial Measurements',
                 style: toggleTextStyle,
               ),
-              value: settingsProvider.settings.useImperial,
+              value: settings.useImperial,
               // contentPadding: EdgeInsets.symmetric(horizontal: 0.0), // Adjust horizontal padding
               onChanged: (value) {
                 settingsProvider.useImperial(value);
@@ -120,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
               style: fieldTextStyle,
             ),
             DropdownButton<int>(
-              value: settingsProvider.settings.updateFrequencySeconds,
+              value: settings.updateFrequencySeconds,
               onChanged: (newValue) {
                 settingsProvider.updateFrequencySeconds(newValue!);
               },
@@ -139,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
               style: fieldTextStyle,
             ),
             DropdownButton<double>(
-              value: settingsProvider.settings.ignoreRadius,
+              value: settings.ignoreRadius,
               onChanged: (newValue) {
                 settingsProvider.updateIgnoreRadius(newValue!);
               },
@@ -158,7 +159,7 @@ class SettingsScreen extends StatelessWidget {
                 'Surpess Duplicates UI Updates',
                 style: toggleTextStyle,
               ),
-              value: settingsProvider.settings.uiIgnoreDeplicatesOnLastUpdate,
+              value: settings.uiIgnoreDeplicatesOnLastUpdate,
               onChanged: (value) {
                 settingsProvider.toggleUIIgnoreDeplicatesOnLastUpdate();
               },
@@ -171,7 +172,7 @@ class SettingsScreen extends StatelessWidget {
               style: fieldTextStyle,
             ),
             DropdownButton<int>(
-              value: settingsProvider.settings.uiMaxDataEntryCount,
+              value: settings.uiMaxDataEntryCount,
               onChanged: (newValue) {
                 settingsProvider.updateUIMaxDataEntryCount(newValue!);
               },
@@ -190,7 +191,7 @@ class SettingsScreen extends StatelessWidget {
                 'Update Zoom on Accuracy',
                 style: toggleTextStyle,
               ),
-              value: settingsProvider.settings.zoomOnAccuracy,
+              value: settings.zoomOnAccuracy,
               onChanged: (value) {
                 settingsProvider.toggleZoomOnAccuracy();
               },
