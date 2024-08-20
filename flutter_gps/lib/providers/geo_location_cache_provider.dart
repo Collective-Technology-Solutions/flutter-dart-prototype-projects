@@ -3,6 +3,7 @@ import 'package:flutter_gps/models/app_settings.dart';
 import 'package:flutter_gps/services/geo_location_service.dart';
 import 'package:flutter_gps/services/web_geo_location_service.dart';
 import 'package:flutter_gps/providers/app_settings.dart';
+import 'package:flutter_gps/utils/position_support.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logging/logging.dart';
@@ -74,9 +75,9 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
       _logger.severe(e);
     } finally {
       if (_settings.serviceRunning) {
-        _logger.fine( 'fetchLocation scheduled.');
-        Future.delayed(
-            Duration(seconds: _settings.updateFrequencySeconds), _fetchLocation);
+        _logger.fine('fetchLocation scheduled.');
+        Future.delayed(Duration(seconds: _settings.updateFrequencySeconds),
+            _fetchLocation);
       }
     }
   }
@@ -101,8 +102,9 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     return _positionCache.getAll();
   }
 
+
   @override
-  List<Position> getAllFiltered([List<Position> Function()? filter]) {
+  List<Position> getAllFiltered([List<Position> Function(List<Position> positions)? filter]) {
     return _positionCache.getAllFiltered(filter);
   }
 
@@ -111,10 +113,6 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     return _positionCache.getOverView();
   }
 
-  @override
-  List<Position> removeTrailingDuplicates() {
-    return _positionCache.removeTrailingDuplicates();
-  }
 
   @override
   void clear() {
@@ -142,13 +140,23 @@ class GeoLocationCacheProvider extends ChangeNotifier implements PositionCache {
     }
   }
 
+  List<Position> removeTrailingDuplicates(List<Position> positions) {
+    return removeTrailingDuplicates(positions);
+  }
+
   Future<Position> _getCurrentLocation() async {
     return await _provider.getCurrentLocation(_settings.locationAccuracy);
   }
 
   @override
-  List<Position> transferAndReset() {
-    return _positionCache.transferAndReset();
+  List<Position> transferAndReset([List<Position> Function(List<Position>)? filter]) {
+    if (filter != null ) {
+      List<Position> results = _positionCache.getAllFiltered(filter);
+      _positionCache.transferAndReset();
+      return results;
+    } else {
+      return _positionCache.transferAndReset();
+    }
   }
 }
 
@@ -157,8 +165,7 @@ abstract class PositionCache {
   void add(Position location);
   List<Position> getAll();
   List<Position> getOverView();
-  List<Position> getAllFiltered([List<Position> Function()? filter]);
-  List<Position> removeTrailingDuplicates();
+  List<Position> getAllFiltered([List<Position> Function(List<Position> positions)? filter]);
   double calculateDistance(Position pos1, Position pos2);
   bool isEmpty();
   bool isNotEmpty();
@@ -190,8 +197,7 @@ class _PositionCache implements PositionCache {
       }
       // else
       // _locations.add(location);
-    }
-    else {
+    } else {
       _locations.add(location);
     }
   }
@@ -203,35 +209,17 @@ class _PositionCache implements PositionCache {
 
   @override
   List<Position> getOverView() {
-    return getAllFiltered(this.removeTrailingDuplicates);
+    return getAllFiltered(removeTrailingDuplicates);
   }
 
   @override
-  List<Position> getAllFiltered([List<Position> Function()? filter]) {
+  List<Position> getAllFiltered([List<Position> Function(List<Position>)? filter]) {
     if (filter == null) {
       return getAll();
     }
-    return filter();
+    return filter(_locations);
   }
 
-  // Remove trailing duplicates from the list
-  @override
-  List<Position> removeTrailingDuplicates() {
-    if (_locations.isEmpty) return [];
-
-    final uniquePositions = <Position>[];
-    Position? lastPosition;
-
-    for (var position in _locations.reversed) {
-      if (lastPosition == null ||
-          lastPosition.latitude != position.latitude ||
-          lastPosition.longitude != position.longitude) {
-        uniquePositions.add(position);
-        lastPosition = position;
-      }
-    }
-    return uniquePositions.reversed.toList();
-  }
 
   @override
   double calculateDistance(Position pos1, Position pos2) {

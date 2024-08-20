@@ -46,7 +46,7 @@ extension LocationPrecisionExtension on LocationPrecision {
 }
 
 List<Marker> buildMarkers(GeoLocationCacheProvider cachedLocations,
-    [List<Position> Function()? filter]) {
+    [List<Position> Function(List<Position>)? filter]) {
   List<LatLng> locations = cachedLocations
       .getUtils()
       .asLatLngs(cachedLocations.getAllFiltered(filter));

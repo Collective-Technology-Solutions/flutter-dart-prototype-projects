@@ -60,7 +60,7 @@ class _MovementSessionListViewState extends State<MovementSessionListView> {
       body: ListView(
         children: sessions.map((session) {
           final metrics = generateMovementMetrics(session);
-          // if (metrics.isEmpty) return ExpansionTile( title: Text("error with Metrics"));
+          if (metrics.isEmpty) return ExpansionTile( title: Text("No Metrics"));
           return ExpansionTile(
             title: Text('Session ${session.name} (${metrics['totalDistance'].toStringAsFixed(2)})'),
             subtitle: Text('Movement Type: ${metrics['movementType'].toString()}'),

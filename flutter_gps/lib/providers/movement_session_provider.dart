@@ -1,13 +1,16 @@
 
 import 'package:flutter/material.dart';
+import 'package:async/async.dart'; // Import the async package
 import 'package:flutter_gps/models/movement_session.dart';
 import 'package:flutter_gps/providers/app_settings.dart';
 import 'package:flutter_gps/providers/geo_location_cache_provider.dart';
+import 'package:flutter_gps/utils/position_support.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logging/logging.dart';
 
 
 class MovementSessionProvider with ChangeNotifier {
+  final _lock = Lock();
   List<MovementSession> _sessions = [];
 
   String _sessionNamePrefix = "Session";
@@ -16,18 +19,23 @@ class MovementSessionProvider with ChangeNotifier {
   List<MovementSession> get sessions => _sessions;
 
   Future<void> checkForMovementSessionEvent(SettingsProvider settingsProvider, GeoLocationCacheProvider geoLocationCacheProvider) async {
-    final Logger _logger = Logger('checkForMovementSessionEvent');
-    if ( settingsProvider.settings.serviceRunning == false && geoLocationCacheProvider.isNotEmpty() ) {
-      print( StackTrace.current );
+    await _lock.synchronized(() async {
+      final Logger _logger = Logger('checkForMovementSessionEvent');
+      if (settingsProvider.settings.serviceRunning == false &&
+          geoLocationCacheProvider.isNotEmpty()) {
+        print(StackTrace.current);
         try {
-          addMovementSession( geoLocationCacheProvider );
-          _logger.info("Create a MovementSession." + _sessions.last.positions.length.toString());
+          addMovementSession(geoLocationCacheProvider);
+          _logger.info("Create a MovementSession." +
+              _sessions.last.positions.length.toString());
         }
-        catch( e ) {
+        catch (e) {
           _logger.severe(e);
         }
+      }
+      else
+        _logger.info("Waiting before creating MovementSession.");
     }
-    else _logger.info( "Waiting before creating MovementSession.");
   }
 
   void addSession(MovementSession session) {
@@ -54,8 +62,10 @@ class MovementSessionProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
   void addMovementSession(GeoLocationCacheProvider geoLocationCacheProvider) {
     List<Position> positions = geoLocationCacheProvider.transferAndReset();
+    positions = applyQualityDataFilter(positions, 1.5);
     String name = '${_sessionNamePrefix} ${++_sessionId}';
     MovementSession session = MovementSession(name: name, positions : List.from(positions), heartRates: []);
     geoLocationCacheProvider.clear();
